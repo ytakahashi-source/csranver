@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シー・エス・ランバー｜掘り起こし架電シート</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1b2d45;--navy2:#2c4a6e;--green:#1e6b45;--green2:#2d8a5a;
+  --gold:#c9a23d;--bg:#f5f4f0;--white:#fff;
+  --text:#1a1a1a;--muted:#666;--border:#ddd8d0;
+  --red-bg:#fdf0f0;--red-bd:#f5c0c0;--red-text:#8b1c1c;
+  --green-bg:#edf7f2;--green-bd:#a8d9be;--green-text:#1a5c35;
+  --amber-bg:#fdf6e3;--amber-bd:#f0d58c;--amber-text:#7a5200;
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.7}
+.wrap{max-width:880px;margin:0 auto;padding:28px 20px}
+.banner{background:var(--navy);color:#fff;border-radius:12px;padding:22px 28px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.banner-badge{background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.07em;display:inline-block;margin-bottom:8px}
+.banner-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.banner-sub{font-size:12px;opacity:.75}
+.banner-right{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-shrink:0}
+.bchip{background:rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;text-align:center;min-width:110px}
+.bchip-val{font-size:14px;font-weight:700;display:block}
+.bchip-lbl{font-size:10px;opacity:.7;display:block;margin-top:1px}
+.sec{background:var(--white);border-radius:10px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
+.sec-hd{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sec-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.sec-title{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--navy)}
+
+.matrix{width:100%;border-collapse:collapse}
+.matrix th{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+.matrix td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12.5px;vertical-align:top;line-height:1.65}
+.matrix tr:last-child td{border-bottom:none}
+.matrix tr:hover td{background:#fafaf8}
+.type-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.hit{color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-bd);border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap}
+.miss{color:var(--red-text);background:var(--red-bg);border:1px solid var(--red-bd);border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap}
+.maybe{color:var(--amber-text);background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap}
+.script{background:#f0f5f2;border-left:3px solid var(--green2);border-radius:0 8px 8px 0;padding:14px 16px;margin:8px 0}
+.script-lbl{font-size:10px;font-weight:700;color:var(--green2);letter-spacing:.07em;margin-bottom:6px}
+.script-txt{font-size:13px;line-height:1.9}
+.script-txt b{color:var(--navy);font-weight:700}
+.script-txt em{font-style:normal;color:var(--green);font-weight:700}
+.flow{display:grid;gap:0}
+.flow-step{display:flex;gap:14px;position:relative;padding-bottom:20px}
+.flow-step:last-child{padding-bottom:0}
+.flow-step::before{content:'';position:absolute;left:16px;top:32px;bottom:0;width:1px;background:var(--border)}
+.flow-step:last-child::before{display:none}
+.flow-num{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+.flow-body{flex:1;padding-top:4px}
+.flow-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:4px}
+.flow-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.flow-desc{font-size:12.5px;color:var(--text);line-height:1.8}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px 11px;font-size:11px;color:var(--muted)}
+.obj-list{display:grid;gap:10px}
+.obj-item{border-radius:8px;border:1px solid var(--border);overflow:hidden}
+.obj-q{background:var(--red-bg);padding:10px 14px;font-size:12.5px;font-weight:700;color:var(--red-text);display:flex;gap:8px;align-items:flex-start}
+.obj-q-badge{background:var(--red-text);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:1px}
+.obj-a{padding:10px 14px;font-size:12.5px;line-height:1.8;display:flex;gap:8px;align-items:flex-start}
+.obj-a-badge{background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:1px}
+.obj-a b{color:var(--navy);font-weight:700}
+.quote{background:var(--navy);color:#fff;border-radius:10px;padding:18px 22px;margin:10px 0}
+.quote-label{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.07em;margin-bottom:8px}
+.quote-text{font-size:13.5px;line-height:1.9}
+.quote-text b{color:var(--gold)}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.action-card{background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px}
+.action-num{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:6px}
+.action-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.action-desc{font-size:12px;color:var(--text);line-height:1.7}
+.action-desc b{color:var(--green);font-weight:700}
+.tag-g{background:var(--green-bg);color:var(--green-text);display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.tag-a{background:var(--amber-bg);color:var(--amber-text);display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.section-sub{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;margin-bottom:10px;padding-top:4px}
+.footer{text-align:center;font-size:11px;color:var(--muted);padding:14px 0 6px}
+.sec-hd{cursor:pointer;user-select:none;transition:background .15s}
+.sec-hd:hover{background:#f5f4f0}
+.sec-chevron{margin-left:auto;font-size:18px;color:var(--muted);transition:transform .25s;line-height:1;flex-shrink:0}
+.sec.open .sec-chevron{transform:rotate(180deg)}
+.sec-bd{overflow:hidden;max-height:0;transition:max-height .35s ease}
+.sec.open .sec-bd{max-height:9999px}
+.sec-bd-inner{padding:16px 20px}
+@media(max-width:620px){
+  .banner{flex-direction:column}.banner-right{width:100%}
+  .action-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <div>
+    <div class="banner-badge">掘り起こし架電シート｜ジョブリー建設</div>
+    <div class="banner-title">シー・エス・ランバー起点の掘り起こし</div>
+    <div class="banner-sub">木造施工管理経験者・住宅系施工管理経験者への掘り起こしに使用</div>
+  </div>
+  <div class="banner-right">
+    <div class="bchip"><span class="bchip-val">年休123日</span><span class="bchip-lbl">土日祝休み</span></div>
+    <div class="bchip"><span class="bchip-val">残業20h台</span><span class="bchip-lbl">出張なし</span></div>
+    <div class="bchip"><span class="bchip-val">650〜1000万</span><span class="bchip-lbl">想定年収</span></div>
+    <div class="bchip"><span class="bchip-val">東証上場G</span><span class="bchip-lbl">拡大フェーズ</span></div>
+  </div></div>
+</div>
+
+<!-- ① 掘り起こし対象 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:#edf2f7;color:#1b2d45">01</div>
+    <div class="sec-title">誰に電話するか　〜掘り起こし対象者の定義〜</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>対象タイプ</th>
+          <th>現職の状況</th>
+          <th>転職理由の仮説</th>
+          <th>刺さる訴求ポイント</th>
+          <th>優先度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="type-badge" style="background:#d8f3dc;color:#1a5c2e">Aタイプ</span><br><b>木造施工管理経験者</b></td>
+          <td>木造専業または住宅系ゼネコン在籍<br>休日・残業に不満あり</td>
+          <td>働き方を整えたいが<br>木造キャリアは活かしたい</td>
+          <td>年休123日・残業20h台<br>土日祝・出張なし</td>
+          <td><span class="tag-g">最優先</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-badge" style="background:#e8f4fd;color:#1b4f8a">Bタイプ</span><br><b>戸建専門・キャリア停滞感あり</b></td>
+          <td>戸建のみで案件幅が狭い<br>キャリアの頭打ち感あり</td>
+          <td>非住宅にも関わりたい<br>スキルの幅を広げたい</td>
+          <td>戸建〜大型木造・保育施設・介護施設<br>中核人材候補として期待</td>
+          <td><span class="tag-g">高優先</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-badge" style="background:#fff3cd;color:#7a5200">Cタイプ</span><br><b>非上場・中小在籍者</b></td>
+          <td>会社の将来性・安定性に不安<br>制度・福利厚生が整っていない</td>
+          <td>腰を据えられる会社に移りたい</td>
+          <td>東証上場グループ・退職金・各種手当</td>
+          <td><span class="tag-a">中優先</span></td>
+        </tr>
+        <tr>
+          <td><span class="type-badge" style="background:#fde8e8;color:#9b1c1c">Dタイプ</span><br><b>1級保有・年収伸び悩み層</b></td>
+          <td>1級建施技士保有<br>年収500万円台・評価が曖昧</td>
+          <td>スキルに見合った年収を得たい</td>
+          <td>1級取得者800万円〜相談余地あり</td>
+          <td><span class="tag-a">中優先</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;padding:10px 14px;background:var(--red-bg);border-radius:8px;font-size:12px;color:var(--red-text);border:1px solid var(--red-bd)">
+      外し対象：RC・S造専門で木造経験なし、東京・千葉エリアへの通勤が物理的に不可な方は無理に提案せず他求人へ切り替える。
+    </div>
+  </div></div>
+</div>
+
+<!-- ② 一言目 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:#d8f3dc;color:#1a5c2e">02</div>
+    <div class="sec-title">一言目トーク　〜転職理由の仮説に合わせて選ぶ〜</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+
+    <div class="section-sub">Aタイプ向け｜働き方改善軸</div>
+    <div class="script">
+      <div class="script-lbl">一言目スクリプト</div>
+      <div class="script-txt">
+        「○○さん、突然のご連絡失礼します。ジョブリー建設の△△と申します。<br>
+        今日ご連絡したのは、○○さんの<b>木造施工管理のご経験を活かせるポジション</b>で、ちょっと珍しい条件の求人が出ていたのでお伝えしたくて。<br>
+        <em>年間休日123日・残業月20時間台・土日祝休みで出張なし</em>、という施工管理では珍しい求人なんですが、<b>今の職場の休日や残業まわりで、少し気になっていることはありますか？</b>2〜3分だけよろしいですか？」
+      </div>
+    </div>
+
+    <div class="section-sub" style="margin-top:14px">Bタイプ向け｜案件の幅・キャリア軸</div>
+    <div class="script">
+      <div class="script-lbl">一言目スクリプト</div>
+      <div class="script-txt">
+        「○○さん、ジョブリー建設の△△です。<br>
+        今の担当案件って、戸建が中心でしょうか？実は今日、<b>木造で戸建だけでなく、アパートや保育施設・介護施設・大型木造まで関われるポジション</b>をご案内したくてご連絡しました。<br>
+        上場企業グループが木造で事業拡大中のタイミングで、<em>中核人材候補として期待される環境</em>です。<b>今のポジションで案件の幅やキャリアの広がりについて、何か感じていることはありますか？</b>」
+      </div>
+    </div>
+
+    <div class="section-sub" style="margin-top:14px">Cタイプ向け｜安定・環境軸</div>
+    <div class="script">
+      <div class="script-lbl">一言目スクリプト</div>
+      <div class="script-txt">
+        「○○さん、ジョブリー建設の△△と申します。<br>
+        今日ご連絡したのは、<b>東証上場グループの木造施工管理ポジション</b>をご紹介したかったからです。蒲田または稲毛勤務で、退職金制度や各種手当も整っています。<em>今の会社の安定性や将来性について、何か気になっていることはありますか？</em><b>情報収集ベースでも歓迎</b>ですので、2〜3分だけよいですか？」
+      </div>
+    </div>
+
+    <div class="section-sub" style="margin-top:14px">Dタイプ向け｜年収・評価軸</div>
+    <div class="script">
+      <div class="script-lbl">一言目スクリプト</div>
+      <div class="script-txt">
+        「○○さん、ジョブリー建設の△△です。<br>
+        1級建築施工管理技士をお持ちとのことで、今日ご連絡しました。<b>想定年収650〜1,000万円、1級保有者は800万円以上も相談余地ありという木造施工管理の求人</b>です。<em>今の年収や評価のされ方で、何か引っかかっている点はありますか？</em>資格をしっかり評価してくれる環境を探している方にはかなり刺さる求人だと思います。」
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:14px">
+      <div class="quote-label">共通の締め方</div>
+      <div class="quote-text">「<b>詳細条件や具体的な案件イメージも含めて、一度だけお話しできませんか。</b>面談は1時間程度、オンラインでも対応しています。情報収集ベースでも全然構いません。今週か来週、ご都合のよい時間はありますか？」</div>
+    </div>
+
+  </div></div>
+</div>
+
+<!-- ③ ヒアリングフロー -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:#fff3cd;color:#7a5200">03</div>
+    <div class="sec-title">架電中のヒアリングフロー　〜聞く順番と目的〜</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-body">
+          <div class="flow-label">STEP 1｜現職確認</div>
+          <div class="flow-title">木造経験の有無と案件種別を確認</div>
+          <div class="flow-desc">「今の担当案件は木造ですか？戸建が中心ですか、それとも非住宅も関わっていますか？」<br><b>→ 木造経験なし → マッチ度低。他求人へ切り替えを検討。</b></div>
+          <div class="chip-row">
+            <div class="chip">戸建</div><div class="chip">アパート</div><div class="chip">保育施設</div><div class="chip">介護施設</div><div class="chip">大型木造</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-body">
+          <div class="flow-label">STEP 2｜スペック確認</div>
+          <div class="flow-title">資格と現在の年収帯を把握</div>
+          <div class="flow-desc">「資格はお持ちですか？1級・2級どちらでしょうか？」「差し支えなければ現在の年収帯も聞かせてもらえますか？」<br><b>→ 1級保有なら800万〜の訴求が可能。年収との比較でギャップを明確にする。</b></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-body">
+          <div class="flow-label">STEP 3｜不満軸の特定</div>
+          <div class="flow-title">現職の「どこが引っかかっているか」を一つに絞る</div>
+          <div class="flow-desc">「今の職場で、もし一つだけ変えられるとしたら何を変えたいですか？」<br><b>→ 休日・残業・年収・安定性・案件の幅のどれかに特定してから、訴求ポイントを組み立て直す。</b></div>
+          <div class="chip-row">
+            <div class="chip">休日・残業</div><div class="chip">年収・評価</div><div class="chip">安定性</div><div class="chip">案件の幅</div><div class="chip">裁量・キャリア</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-body">
+          <div class="flow-label">STEP 4｜温度感確認</div>
+          <div class="flow-title">転職の本気度と意思決定の軸を把握</div>
+          <div class="flow-desc">「転職については今どのくらい前向きに考えていますか？今すぐ動きたいのか、良い案件があれば動きたいのか、まずは情報収集なのか」<br><b>→ 情報収集ベースでも「一度お話だけ」で面談獲得へつなぐ。</b></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <div class="flow-body">
+          <div class="flow-label">STEP 5｜面談打診</div>
+          <div class="flow-title">その場で日程候補を2〜3個出して押さえる</div>
+          <div class="flow-desc">「せっかくですので、一度だけ詳しくお話しできませんか。1時間程度、オンラインでも対応しています。今週・来週でご都合はありますか？」<br><b>→ 先に候補日を出す。「検討します」の場合は次の連絡日時を確約して終わる。</b></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ④ 懸念・切り返し -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:var(--red-bg);color:var(--red-text)">04</div>
+    <div class="sec-title">よくある懸念と切り返しトーク</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+    <div class="obj-list">
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>残業20hって本当？施工管理でそんなに少ないわけがない</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span><b>出張なし・近隣中心の現場配置</b>と、グループ内でプレカットから建築まで一気通貫できる体制が整っているので実現できている部分があります。繁忙期は前後することもあるかもしれませんが、<b>求人票に明示できている時点で、一度話を聞いてみる価値はある</b>と思いませんか？</span></div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>今すぐ転職するつもりはない</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span>転職を急いでほしいわけではないんです。<b>今日ご連絡したのは、条件が重なるタイミングが今だから</b>です。情報収集として話を聞くだけで構いません。<b>「良い情報があったときだけ教えてほしい」という方も多い</b>ので、まず30分だけ話だけ聞いていただけませんか？</span></div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>大型木造やアパートはやったことがない</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span>全く問題ありません。<b>戸建・住宅系の施工管理経験があれば歓迎のポジション</b>です。むしろ拡大フェーズなので、一緒に幅を広げてほしいという採用意図があります。今の経験を活かしながら新しい案件種別を積める環境です。</span></div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>千葉の会社で遠いんじゃないか</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span>本社は千葉の東金市ですが、<b>実際の勤務地は蒲田（東京都大田区）か稲毛（千葉市）のどちらか</b>です。本社への通勤は基本的に不要なので、東京・千葉エリア在住であれば通いやすい環境ですよ。</span></div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>今の年収500万ちょいで特に不満はない</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span>今のご年収が500万円台であれば、<b>最低でも150万円以上の年収アップが想定できる求人</b>です。さらに1級建築施工管理技士をお持ちであれば800万円以上も相談余地があります。「不満はないが上がるなら動く」という方にも十分メリットになる水準だと思います。</span></div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-q"><span class="obj-q-badge">懸念</span>他の求人もいくつか見ていて、正直多くて</div>
+        <div class="obj-a"><span class="obj-a-badge">返し</span><span><b>今見ている求人の中に、年休123日・残業20h台・土日祝休みで出張なし、という施工管理求人はありますか？</b>もしなければ、比較軸に入れておく価値は十分あると思います。一度話を聞くだけで選択肢が広がりますよ。</span></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ⑤ GO / HOLD 判断 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:var(--green-bg);color:var(--green)">05</div>
+    <div class="sec-title">架電後の判断基準　〜提案を進めるか否かの見極め〜</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+    <table class="matrix">
+      <thead>
+        <tr><th>確認項目</th><th>GO（提案継続）</th><th>HOLD（他求人を検討）</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>木造施工管理経験</td>
+          <td><span class="hit">あり（木造・住宅系）</span></td>
+          <td><span class="miss">RC・S造専門・木造経験なし</span></td>
+        </tr>
+        <tr>
+          <td>勤務地</td>
+          <td><span class="hit">蒲田 or 稲毛に通勤可</span></td>
+          <td><span class="miss">神奈川西部・埼玉北部など転居不可</span></td>
+        </tr>
+        <tr>
+          <td>現職の不満軸</td>
+          <td><span class="hit">休日・残業・年収・安定・案件幅のいずれかあり</span></td>
+          <td><span class="miss">特に不満なし・転職意向ゼロ</span></td>
+        </tr>
+        <tr>
+          <td>転職温度感</td>
+          <td><span class="hit">情報収集中 / 良い案件があれば動く</span></td>
+          <td><span class="maybe">今すぐ必ず転職 → 他の選択肢も同時に並走</span></td>
+        </tr>
+        <tr>
+          <td>拡大期・中核人材への反応</td>
+          <td><span class="hit">前向き・関心あり</span></td>
+          <td><span class="maybe">安定志向強すぎる → Cタイプ軸（上場・安定）で再アプローチ</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div></div>
+</div>
+
+<!-- ⑥ 次アクション -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:#edf2f7;color:#1b2d45">06</div>
+    <div class="sec-title">架電後の次アクション</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="action-num">STEP 01｜当日中</div>
+        <div class="action-title">面談日程の確定 or 再架電予約</div>
+        <div class="action-desc">架電中に面談日程が決まらなかった場合は<b>「今週中に候補日程を送る」</b>と約束し当日中にメッセージを送る。返信がなければ翌日17〜19時に再架電。</div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">STEP 02｜面談前</div>
+        <div class="action-title">転職軸を整理して面談に臨む</div>
+        <div class="action-desc">架電で把握した「不満軸」を起点に、<b>「なぜシー・エス・ランバーがその軸に刺さるか」</b>を1〜2文で言語化してから面談へ。求人票の羅列にならないよう注意。</div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">STEP 03｜面談当日</div>
+        <div class="action-title">転職理由と求人特徴を接続する提案</div>
+        <div class="action-desc">「○○さんが変えたいのは残業だとおっしゃっていましたよね。シー・エス・ランバーは施工管理で残業20h台を実現している珍しい会社で…」という<b>文脈接続型</b>の提案を行う。</div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">STEP 04｜面談後</div>
+        <div class="action-title">面接意思の確認と懸念の吸い上げ</div>
+        <div class="action-desc">面談後24時間以内に連絡。「正直なところどうでしたか？」で懸念を引き出し、<b>応募 / 見送り / 継続検討</b>を明確にする。「検討します」は次連絡日時を確約して終わる。</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ⑦ シー・エス・ランバーの強み・メリット詳細 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-icon" style="background:#d8f3dc;color:#1a5c2e">07</div>
+    <div class="sec-title">シー・エス・ランバーの強み・メリット詳細　〜CA知識として押さえておく〜</div>
+  </div>
+    <span class="sec-chevron">&#8964;</span>
+  </div>
+  <div class="sec-bd"><div class="sec-bd-inner">
+
+    <div class="section-sub">A｜ビジネスモデルの強み</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:18px">
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--green2);letter-spacing:.06em;margin-bottom:6px">川上から川下まで一気通貫</div>
+        <div style="font-size:12.5px;line-height:1.8">木材プレカット加工 → 建て方工事 → 木造建築請負 → 不動産販売・賃貸まで、グループ内で完結できる数少ないプレイヤー。材料調達から施工まで自社で動かせるため、<b>コスト競争力・品質管理・工期短縮</b>で他社に差をつけられる構造。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--green2);letter-spacing:.06em;margin-bottom:6px">関東トップクラスのプレカットシェア</div>
+        <div style="font-size:12.5px;line-height:1.8">木材プレカット事業は関東トップクラスのシェアを持ち、創業から40年超の実績とネットワークを保有。プレカット事業の安定収益が基盤にあるため、<b>建築請負事業の拡大投資を継続できる財務的余力</b>がある。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--green2);letter-spacing:.06em;margin-bottom:6px">不動産賃貸事業による安定収益</div>
+        <div style="font-size:12.5px;line-height:1.8">建築請負事業に加え、不動産賃貸事業からの定期的な収益も確保。景気変動に左右されにくい複合収益モデルを持っており、<b>会社の安定性・継続性</b>を語る根拠になる。</div>
+      </div>
+    </div>
+
+    <div class="section-sub">B｜市場・成長性の強み</div>
+    <div style="background:#f0f5f2;border-left:3px solid var(--green2);border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:18px">
+      <div style="font-size:12.5px;line-height:1.9">
+        <b>脱炭素化・木造建築需要の拡大という構造的追い風がある。</b>日本政府の2050年カーボンニュートラル目標を受け、木造建築の割合を増やす政策が進んでいる。木造建築物はRC・S造の建物と比べてCO2排出量が半分程度とされており、<b>公共施設・福祉施設・大型建築での木造化ニーズが今後急増</b>する見込み。この波を早期から取り込める体制を持つシー・エス・ランバーは、市場拡大の恩恵を受けやすいポジションにある。<br>
+        → 「今後10〜20年、木造施工管理の市場価値は上がり続ける」という文脈で候補者に伝えられる。
+      </div>
+    </div>
+
+    <div class="section-sub">C｜働き方の強み（他社との具体的差分）</div>
+    <table class="matrix" style="margin-bottom:18px">
+      <thead>
+        <tr>
+          <th>比較軸</th>
+          <th>一般的な木造施工管理求人</th>
+          <th>シー・エス・ランバー</th>
+          <th>差分・理由</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>年間休日</td>
+          <td><span class="maybe">105〜115日程度</span></td>
+          <td><span class="hit">123日</span></td>
+          <td>土日祝完全休み。施工管理で123日は上位5%水準。</td>
+        </tr>
+        <tr>
+          <td>残業時間</td>
+          <td><span class="miss">月40〜60h台も多い</span></td>
+          <td><span class="hit">月20h台</span></td>
+          <td>出張なし・近隣中心の現場配置が実現させている。グループ内完結で移動ロスが少ない。</td>
+        </tr>
+        <tr>
+          <td>出張</td>
+          <td><span class="miss">遠方出張あり多い</span></td>
+          <td><span class="hit">出張なし・近隣中心</span></td>
+          <td>蒲田 or 稲毛の近隣現場に絞った配置。遠方拘束なし。</td>
+        </tr>
+        <tr>
+          <td>育休取得率</td>
+          <td><span class="maybe">取得しにくい職場も多い</span></td>
+          <td><span class="hit">100%</span></td>
+          <td>建設業界では異例。長期就業を考える候補者への訴求ポイント。</td>
+        </tr>
+        <tr>
+          <td>資格取得支援</td>
+          <td><span class="maybe">補助あり程度</span></td>
+          <td><span class="hit">資格取得支援制度あり</span></td>
+          <td>2級→1級へのステップアップを会社が支援。年収アップにも直結。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub">D｜キャリア形成の強み</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:18px">
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--navy2);letter-spacing:.06em;margin-bottom:6px">案件の幅が木造で最大級</div>
+        <div style="font-size:12.5px;line-height:1.8">戸建・アパート・保育施設・介護施設・大型木造建築まで、木造領域のほぼすべての案件種別を経験できる。「木造のゼネラリスト」として市場価値の高い施工管理者に成長できる環境。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--navy2);letter-spacing:.06em;margin-bottom:6px">拡大期の中核人材として期待</div>
+        <div style="font-size:12.5px;line-height:1.8">建築請負事業を積極拡大中のタイミングで入社するため、通常より早くリーダーポジションを任される可能性が高い。「成長企業のベンチャー的なチャンス × 上場企業の安定性」を両立できる稀有な環境。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--navy2);letter-spacing:.06em;margin-bottom:6px">1級取得で年収800万円〜の射程</div>
+        <div style="font-size:12.5px;line-height:1.8">資格取得支援制度あり。2級保有者が1級を取得すると年収提示が大幅に上がる構造。入社後のキャリアパスが「資格→年収」に直結しており、成長の道筋が見えやすい。</div>
+      </div>
+    </div>
+
+    <div class="section-sub">E｜処遇・制度の強み（細目）</div>
+    <table class="matrix" style="margin-bottom:4px">
+      <thead>
+        <tr><th>制度・手当</th><th>内容</th><th>CA活用ポイント</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>想定年収</b></td>
+          <td>650〜1,000万円<br>1級取得者は800万円〜も相談余地あり</td>
+          <td>現職年収との差分を計算して伝える。500万円台なら「+150万円以上」と具体化する。</td>
+        </tr>
+        <tr>
+          <td><b>昇給・賞与</b></td>
+          <td>昇給年1回 / 賞与年2回（6月・12月）</td>
+          <td>年2回の賞与は建設業平均より多い。毎年昇給の機会がある点も安心感につながる。</td>
+        </tr>
+        <tr>
+          <td><b>住宅手当</b></td>
+          <td>15,000円／月</td>
+          <td>年18万円の実質年収上乗せ。額面年収だけでなく実質手取りで比較できる。</td>
+        </tr>
+        <tr>
+          <td><b>食事手当</b></td>
+          <td>4,000円／月</td>
+          <td>年4.8万円。小さいが積み上げると実感しやすい手当。</td>
+        </tr>
+        <tr>
+          <td><b>家族手当</b></td>
+          <td>配偶者10,000円・子ども5,000円（2人目以降3,000円）／月</td>
+          <td>家族がいる候補者への訴求力が高い。子ども2人いれば月2万円超の手当になる。</td>
+        </tr>
+        <tr>
+          <td><b>退職金制度</b></td>
+          <td>勤続2年以上で適用</td>
+          <td>非上場・中小から転職する候補者には「退職金あり」は大きな差別化になる。</td>
+        </tr>
+        <tr>
+          <td><b>育休取得率</b></td>
+          <td>100%</td>
+          <td>建設業界では異例の高水準。ライフイベントを見据えた候補者への安心材料。</td>
+        </tr>
+        <tr>
+          <td><b>資格取得支援</b></td>
+          <td>制度あり</td>
+          <td>2級保有者が1級を目指す動機づけになる。費用補助の詳細は面談で確認を促す。</td>
+        </tr>
+        <tr>
+          <td><b>社会保険・社員共済会</b></td>
+          <td>完備</td>
+          <td>当たり前のようで、零細・個人事業系から転職する候補者には「完備」が刺さることがある。</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div></div>
+</div>
+
+<div class="footer">シー・エス・ランバー｜掘り起こし架電シート　ジョブリー建設 CA向け</div>
+</div>
+<script>
+document.querySelectorAll('.sec-hd').forEach(function(hd){
+  hd.addEventListener('click',function(){
+    hd.closest('.sec').classList.toggle('open');
+  });
+});
+// 最初のセクションをデフォルトで開く
+var first = document.querySelector('.sec');
+if(first) first.classList.add('open');
+</script>
+</body>
+</html>
